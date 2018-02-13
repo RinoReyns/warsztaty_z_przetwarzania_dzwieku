@@ -7,11 +7,9 @@ from scipy import log10, unwrap, arctan2, imag, real
 from statistics import variance
 
 
-def generate_time_vector(ts, signal_length):
+def generate_time_vector(ts):
     t0 = np.arange(0, 1, ts)
     t = t0
-    for i in range(1, int(np.ceil(np.true_divide(signal_length, len(t))))):
-        t = np.concatenate((t, t0 + i), 0)
     return t
 
 
@@ -81,22 +79,41 @@ def generate_sine_wave(signal_frequency, fs):
     return signal, signal_length
 
 
+def generate_square_wave(signal_frequency, fs):
+    x = np.arange(fs)
+    signal = sig.square(2 * np.pi * signal_frequency * x/ fs)
+    signal_length = len(signal)
+    return signal, signal_length
+
+
+def generate_sawtooth_wave(signal_frequency, fs):
+    x = np.arange(fs)
+    signal = sig.sawtooth(2 * np.pi * signal_frequency * x / fs)
+    signal_length = len(signal)
+    return signal, signal_length
+
+
 def main():
     # parametry wejsciowe sygnału
     signal_frequency = 20   # częstotliwość sygnału
-    fs = 40              # częstotliwość próbkowania
+    fs = 2000              # częstotliwość próbkowania
     ts = 1/fs
     SNR = 10                # dB
+    time_vector = generate_time_vector(ts)
 
     # generowanie sygnału sinusoidalnego
     signal, signal_length = generate_sine_wave(signal_frequency, fs)
 
+    #generowanie sygnału prostokątnego
+    # signal, signal_length = generate_square_wave(signal_frequency, fs)
+
+    # generowanie piły
+    # signal, signal_length = generate_sawtooth_wave(signal_frequency, fs)
 
     # wykreślanie sygnału
-    time_vector = generate_time_vector(ts, signal_length)
     display_signal(signal, fs, time_vector, 1)
 
-    # # dodawanie szumu do sygnału
+    # dodawanie szumu do sygnału
     # noise = generate_noise(signal_length, SNR)
     # signal_and_noise = signal + noise
     # display_signal(signal_and_noise, fs, time_vector, 3, ' z dodanym białym szumem gaussowskim.')

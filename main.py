@@ -7,19 +7,12 @@ from scipy import log10, unwrap, arctan2, imag, real
 from statistics import variance
 
 
-def generate_time_vector(ts):
-    t0 = np.arange(0, 1, ts)
-    t = t0
-    return t
-
-
 def display_signal(signal, fs, time_vector, figure_number, extra_title='.'):
-    # signal = signal[0::2]
     signal_length = len(signal)
     frq = np.arange(signal_length) / np.true_divide(signal_length, fs)
-    frq = frq[:int(signal_length / 2)]
+    # frq = frq[:int(signal_length / 2)]
     y = np.fft.fft(signal) / signal_length
-    y = y[:int(signal_length / 2)]
+    # y = y[:int(signal_length / 2)]
     plt.figure(figure_number)
     plt.plot(time_vector[:signal_length], signal, drawstyle='steps-post')
     plt.xlabel('Czas [s]')
@@ -96,10 +89,10 @@ def generate_sawtooth_wave(signal_frequency, fs):
 def main():
     # parametry wejsciowe sygnału
     signal_frequency = 20   # częstotliwość sygnału
-    fs = 2000              # częstotliwość próbkowania
+    fs = 40              # częstotliwość próbkowania
     ts = 1/fs
     SNR = 10                # dB
-    time_vector = generate_time_vector(ts)
+    time_vector = np.arange(0, 1, ts)
 
     # generowanie sygnału sinusoidalnego
     signal, signal_length = generate_sine_wave(signal_frequency, fs)
